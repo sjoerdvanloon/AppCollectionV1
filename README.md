@@ -2,7 +2,7 @@
 
 Een kleine statische projectindex met zoeken, categorieën en projectdetails.
 
-De inhoud staat in `dist/projects.js`. Pas daar projecten, live links, broncode, documentatie, tech stack en gebruikstekst aan. Ontbrekende gegevens zijn bewust leeg; Pick a Pen is nog niet teruggevonden en Flow Lab heeft nog geen gepubliceerde URL. Links kunnen een account vereisen.
+De inhoud staat in `dist/projects.js`. Pas daar projecten, live links, broncode, documentatie, tech stack en gebruikstekst aan. Ontbrekende gegevens zijn bewust leeg; Flow Lab heeft nog geen gepubliceerde URL. Links kunnen een account vereisen.
 
 Bronnen: beschikbare chatgeschiedenis, lokale project-README’s en package.json, Git-remotes, Sites-overzicht en Vercel-projectdomeinen. Geen inloggegevens of persoonlijke chatinhoud opgenomen.
 
