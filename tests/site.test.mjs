@@ -20,7 +20,7 @@ test('catalogue has unique projects, valid categories and HTTPS links', async ()
 
 test('HTML references existing local assets and valid JavaScript', async () => {
   const html = await readFile('dist/index.html', 'utf8');
-  for (const [, file] of html.matchAll(/(?:src|href)="([^"#]+\.(?:js|css))"/g)) await access(`dist/${file}`);
+  for (const [, file] of html.matchAll(/(?:src|href)="([^"#]+\.(?:js|css|svg))"/g)) await access(`dist/${file}`);
   for (const file of ['app.js','projects.js','preferences.js']) new vm.Script(await readFile(`dist/${file}`, 'utf8'));
   const css = await readFile('dist/style.css', 'utf8');
   for (const [, file] of css.matchAll(/url\('([^']+)'\)/g)) {
