@@ -23,7 +23,9 @@ test('HTML references existing local assets and valid JavaScript', async () => {
   for (const [, file] of html.matchAll(/(?:src|href)="([^"#]+\.(?:js|css))"/g)) await access(`dist/${file}`);
   for (const file of ['app.js','projects.js','preferences.js']) new vm.Script(await readFile(`dist/${file}`, 'utf8'));
   const css = await readFile('dist/style.css', 'utf8');
-  for (const [, file] of css.matchAll(/url\('([^']+)'\)/g)) await access(`dist/${file}`);
+  for (const [, file] of css.matchAll(/url\('([^']+)'\)/g)) {
+    if (!/^(https?:|data:)/.test(file)) await access(`dist/${file}`);
+  }
 });
 
 test('preferences survive reloads and recover from invalid or unavailable storage', async () => {
