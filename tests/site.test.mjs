@@ -21,7 +21,35 @@ test('catalogue has unique projects, valid categories and HTTPS links', async ()
 test('HTML references existing local assets and valid JavaScript', async () => {
   const html = await readFile('dist/index.html', 'utf8');
   for (const [, file] of html.matchAll(/(?:src|href)="([^"#]+\.(?:js|css))"/g)) await access(`dist/${file}`);
-  for (const file of ['app.js','projects.js']) new vm.Script(await readFile(`dist/${file}`, 'utf8'));
+  for (const file of ['app.js','projects.js','preferences.js']) new vm.Script(await readFile(`dist/${file}`, 'utf8'));
+  const css = await readFile('dist/style.css', 'utf8');
+  for (const [, file] of css.matchAll(/url\('([^']+)'\)/g)) await access(`dist/${file}`);
+});
+
+test('preferences survive reloads and recover from invalid or unavailable storage', async () => {
+  const script = await readFile('dist/preferences.js', 'utf8');
+  let stored = null;
+  function load(unavailable = false) {
+    const context = { window:{}, document:{documentElement:{dataset:{}}}, localStorage:{getItem(){if(unavailable)throw Error('blocked');return stored;},setItem(key,value){if(unavailable)throw Error('blocked');stored=value;}} };
+    vm.runInNewContext(script, context);
+    return context;
+  }
+  let page = load();
+  assert.equal(page.document.documentElement.dataset.layout, 'compact');
+  page.window.AppPreferences.save({layout:'posters',showStack:false,favorites:['ArtAtlas','ArtAtlas']});
+  page = load();
+  assert.equal(page.document.documentElement.dataset.layout, 'posters');
+  assert.equal(page.document.documentElement.dataset.stack, 'false');
+  assert.equal(page.window.AppPreferences.current.favorites.length, 1);
+  stored = '{bad json';
+  assert.equal(load().window.AppPreferences.current.layout, 'compact');
+  stored = JSON.stringify({layout:'invalid',favorites:[null,4,'MiniPaint']});
+  page = load();
+  assert.equal(page.window.AppPreferences.current.layout, 'compact');
+  assert.equal(page.window.AppPreferences.current.favorites.length, 1);
+  page = load(true);
+  assert.equal(page.window.AppPreferences.current.layout, 'compact');
+  assert.doesNotThrow(() => page.window.AppPreferences.save({layout:'posters'}));
 });
 
 test('release policy accepts only the merged commit of a PR into this repository main', () => {

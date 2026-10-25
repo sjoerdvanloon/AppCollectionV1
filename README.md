@@ -19,3 +19,11 @@ De inhoud staat in `dist/projects.js`. Pas daar projecten, live links, broncode,
 Bronnen: beschikbare chatgeschiedenis, lokale project-README’s en package.json, Git-remotes, Sites-overzicht en Vercel-projectdomeinen. Geen inloggegevens of persoonlijke chatinhoud opgenomen.
 
 Open `dist/index.html` direct in een browser of serveer de map `dist` via een statische HTTP-server. Geen installatie of build nodig. Lettertypen laden optioneel via Google Fonts, met lokale terugvallettertypen.
+
+## Layouts and illustrations
+
+The default Compact view has illustrated cards and no introductory banner. Switch to Posters in the header for the original large poster cards and introduction. The Tech stack switch hides technical tags on cards; full project details remain available. Pin projects to move them to the top or use the Favorites filter.
+
+Layout, tech-stack visibility and favorites are saved in browser-local storage (`appcollection.preferences.v1`); nothing is sent to a server. If storage is unavailable, the controls still work for the current visit. Search and category selections remain in place when switching layouts.
+
+The locally hosted illustration atlas in `dist/assets/project-illustrations.png` was generated for this project. Tile mappings in `dist/app.js` use project names and remain stable when the catalogue is reordered. New projects use a neutral fallback illustration until a tile is assigned. Posters retain the original geometric artwork.
