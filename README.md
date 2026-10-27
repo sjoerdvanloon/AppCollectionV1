@@ -27,3 +27,5 @@ The default Compact view has illustrated cards and no introductory banner. Switc
 Layout, tech-stack visibility and favorites are saved in browser-local storage (`appcollection.preferences.v1`); nothing is sent to a server. If storage is unavailable, the controls still work for the current visit. Search and category selections remain in place when switching layouts.
 
 The locally hosted illustration atlas in `dist/assets/project-illustrations.png` was generated for this project. Tile mappings in `dist/app.js` use project names and remain stable when the catalogue is reordered. New projects use a neutral fallback illustration until a tile is assigned. Posters retain the original geometric artwork.
+
+Reusable libraries use kind: 'library' in dist/projects.js. Their cards show Module and source/documentation links without suggesting a missing hosted app. Libraries keep url empty when no standalone application exists.

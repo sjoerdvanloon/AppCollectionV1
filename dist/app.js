@@ -44,7 +44,7 @@
         <div class="cardbody">
           <button class="thumbnail-button" data-project="${index}" aria-label="Details van ${escapeHTML(p.name)}">${art(p)}</button>
           <div class="cardinfo"><div class="cardhead"><h3><button class="title-button" data-project="${index}">${escapeHTML(p.name)}</button></h3></div>
-          <span class="category-badge category-${p.category.toLowerCase()}">${escapeHTML(p.category)}</span>${!p.url ? '<span class="status">Nog niet live</span>' : ''}
+          <span class="category-badge category-${p.category.toLowerCase()}">${escapeHTML(p.category)}</span>${p.kind === 'library' ? '<span class="status">Module</span>' : !p.url ? '<span class="status">Nog niet live</span>' : ''}
           <p class="card-description">${escapeHTML(p.description)}</p>
           <div class="tags card-tags">${p.stack.slice(0,3).map(t => `<span>${escapeHTML(t)}</span>`).join('')}</div></div>
           <div class="cardlinks">${link(p.url,'Open app','open-app')}${link(p.source,'Code','source-link','code')}${link(docs,'Handleiding','docs-link','book')}<button class="details-button" data-project="${index}">Details <span aria-hidden="true">+</span></button></div>
@@ -83,7 +83,7 @@
     const button = e.target.closest('[data-project]');
     if (!button) return;
     const p = projects[Number(button.dataset.project)];
-    document.querySelector('#detail-content').innerHTML = `${art(p)}<p class="eyebrow">${escapeHTML(p.category)}</p><h2 id="dialog-title">${escapeHTML(p.name)}</h2><p class="dialogdesc">${escapeHTML(p.description)}</p><h3>Zo gebruik je het</h3><p>${escapeHTML(p.usage)}</p><h3>Tech stack</h3><div class="tags">${p.stack.length ? p.stack.map(s => `<span>${escapeHTML(s)}</span>`).join('') : '<p>Nog niet vastgelegd.</p>'}</div><h3>Alle links</h3><div class="detaillinks">${link(p.url,'Open website')}${link(p.source,'Bekijk broncode','','code')}${link(p.docs || (p.source ? p.source+'#readme' : null),'Handleiding / README','','book')}</div>${!p.url || !p.source ? `<p class="missing">${[!p.url ? 'Live link ontbreekt nog.' : '',!p.source ? 'Broncodelink ontbreekt nog.' : ''].filter(Boolean).join(' ')}</p>` : ''}`;
+    document.querySelector('#detail-content').innerHTML = `${art(p)}<p class="eyebrow">${escapeHTML(p.category)}</p><h2 id="dialog-title">${escapeHTML(p.name)}</h2><p class="dialogdesc">${escapeHTML(p.description)}</p><h3>Zo gebruik je het</h3><p>${escapeHTML(p.usage)}</p><h3>Tech stack</h3><div class="tags">${p.stack.length ? p.stack.map(s => `<span>${escapeHTML(s)}</span>`).join('') : '<p>Nog niet vastgelegd.</p>'}</div><h3>Alle links</h3><div class="detaillinks">${link(p.url,'Open website')}${link(p.source,'Bekijk broncode','','code')}${link(p.docs || (p.source ? p.source+'#readme' : null),'Handleiding / README','','book')}</div>${(!p.url && p.kind !== 'library') || !p.source ? `<p class="missing">${[!p.url && p.kind !== 'library' ? 'Live link ontbreekt nog.' : '',!p.source ? 'Broncodelink ontbreekt nog.' : ''].filter(Boolean).join(' ')}</p>` : ''}`;
     dialog.setAttribute('aria-labelledby','dialog-title');
     dialog.showModal();
   });
