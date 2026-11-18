@@ -35,3 +35,11 @@ In `dist/projects.js`, a building block has `category: 'Bouwstenen'` and a `kind
 - `kind: 'service'` marks a shared hosted service, such as ErrorLog or FeedbackKit. It keeps its `url`.
 
 A tool that only runs on your own computer has `local: true` and no `url`; its card says Alleen lokaal (HomeNetwork). `tests/site.test.mjs` checks these rules.
+
+## Status page and weekly report
+
+`/status` compares what each app runs live with GitHub: live commit, `main`, commits not yet live, `staging` and open PR counts, plus the newest tag of each building block. The list lives in `status/apps.mjs`; the collector in `status/collect.mjs` serves both `/api/status` (a Vercel Function, cached ten minutes) and `npm run status` (the weekly report in Markdown).
+
+- Live version: each app's public `/version.json` (HealthKit 0.3 schema: `schema`, `app`, `version`, `commit`, …). This site writes its own at build time (`scripts/write-version.mjs`). Vercel apps without the file fall back to the latest successful GitHub Production deployment. ChatGPT Sites apps stay "unknown" until they publish `/version.json`.
+- GitHub: set `STATUS_GITHUB_TOKEN` in Vercel, a fine-grained read-only token (Contents, Pull requests, Deployments) for the `sjoerdvanloon` repositories. Without it, private repositories cannot be read.
+- The output is public, so it holds counts and commit ids only: no PR titles, bodies or authors.
