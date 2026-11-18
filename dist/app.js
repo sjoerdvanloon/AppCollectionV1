@@ -4,6 +4,9 @@
   const dialog = document.querySelector('#detail');
   const preferences = window.AppPreferences.current;
   let category = 'Alles';
+  // Building blocks: modules apps build in (kind 'library') and shared services they call (kind 'service').
+  const isBlock = p => p.kind === 'library' || p.kind === 'service';
+  const inCategory = p => category === 'Alles' || (category === 'Favorieten' ? favorites.has(p.name) : p.category === category);
   const favorites = new Set(preferences.favorites);
   const escapeHTML = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const icons = {
@@ -32,7 +35,8 @@
   }
   function render() {
     const query = search.value.trim().toLocaleLowerCase('nl');
-    const filtered = projects.filter(p => (category === 'Alles' || (category === 'Favorieten' ? favorites.has(p.name) : p.category === category)) && [p.name,p.description,...p.stack].join(' ').toLocaleLowerCase('nl').includes(query));
+    const shelfProjects = projects.filter(p => category === 'Bouwstenen' ? isBlock(p) : category === 'Favorieten' || !isBlock(p));
+    const filtered = shelfProjects.filter(p => inCategory(p) && [p.name,p.description,...p.stack].join(' ').toLocaleLowerCase('nl').includes(query));
     filtered.sort((a,b) => Number(favorites.has(b.name)) - Number(favorites.has(a.name)));
     grid.innerHTML = filtered.map(p => {
       const index = projects.indexOf(p);
@@ -44,7 +48,7 @@
         <div class="cardbody">
           <button class="thumbnail-button" data-project="${index}" aria-label="Details van ${escapeHTML(p.name)}">${art(p)}</button>
           <div class="cardinfo"><div class="cardhead"><h3><button class="title-button" data-project="${index}">${escapeHTML(p.name)}</button></h3></div>
-          <span class="category-badge category-${p.category.toLowerCase()}">${escapeHTML(p.category)}</span>${p.kind === 'library' ? '<span class="status">Module</span>' : !p.url ? '<span class="status">Nog niet live</span>' : ''}
+          ${isBlock(p) ? '' : `<span class="category-badge category-${p.category.toLowerCase()}">${escapeHTML(p.category)}</span>`}${p.kind === 'library' ? '<span class="status">Module</span>' : p.kind === 'service' ? '<span class="status">Gedeelde service</span>' : p.local ? '<span class="status">Alleen lokaal</span>' : !p.url ? '<span class="status">Nog niet live</span>' : ''}
           <p class="card-description">${escapeHTML(p.description)}</p>
           <div class="tags card-tags">${p.stack.slice(0,3).map(t => `<span>${escapeHTML(t)}</span>`).join('')}</div></div>
           <div class="cardlinks">${link(p.url,'Open app','open-app')}${link(p.source,'Code','source-link','code')}${link(docs,'Handleiding','docs-link','book')}<button class="details-button" data-project="${index}">Details <span aria-hidden="true">+</span></button></div>
@@ -52,14 +56,23 @@
     }).join('');
     document.querySelector('#empty').hidden = Boolean(filtered.length);
     document.querySelector('#results').textContent = `${filtered.length} ${filtered.length === 1 ? 'project' : 'projecten'} gevonden`;
-    document.querySelector('#total').textContent = filtered.length === projects.length ? `${projects.length} projecten` : `${filtered.length} van ${projects.length}`;
+    const noun = category === 'Bouwstenen' ? 'bouwstenen' : 'projecten';
+    document.querySelector('#total').textContent = filtered.length === shelfProjects.length ? `${shelfProjects.length} ${noun}` : `${filtered.length} van ${shelfProjects.length}`;
   }
-  function chooseCategory(value) {
-    category = value;
+  // Bouwstenen (modules and shared services) is a category of its own; Alles shows the apps and tools without them.
+  const categories = ['Alles','Spellen','Creatief','Muziek','AI','Tools','Experimenten','Favorieten','Bouwstenen'];
+  function chooseCategory(value, updateHash = true) {
+    category = categories.includes(value) ? value : 'Alles';
+    const blocks = category === 'Bouwstenen';
     document.querySelectorAll('[data-filter]').forEach(button => button.setAttribute('aria-pressed', button.dataset.filter === category));
+    document.querySelector('#shelf-title').textContent = blocks ? 'Bouwstenen' : 'Alle projecten';
+    document.querySelector('#shelf-intro').hidden = !blocks;
+    search.placeholder = blocks ? 'Zoek een module of techniek…' : 'Zoek een project of techniek…';
+    if (updateHash) history.replaceState(null, '', blocks ? '#bouwstenen' : location.pathname + location.search);
     render();
   }
-  document.querySelector('.filters').innerHTML = ['Alles','Creatief','Spellen','Tools','Experimenten','Favorieten'].map(c => `<button type="button" aria-pressed="${c === 'Alles'}" data-filter="${c}">${c === 'Favorieten' ? '☆ ' : ''}${c}</button>`).join('');
+  document.querySelector('.filters').innerHTML = categories.map(c => `<button type="button" aria-pressed="${c === 'Alles'}" data-filter="${c}"${c === 'Bouwstenen' ? ' class="filter-blocks"' : ''}>${c === 'Favorieten' ? '☆ ' : ''}${c}</button>`).join('');
+  window.addEventListener('hashchange', () => { const want = location.hash === '#bouwstenen' ? 'Bouwstenen' : 'Alles'; if ((want === 'Bouwstenen') !== (category === 'Bouwstenen')) chooseCategory(want, false); });
   document.querySelector('.filters').addEventListener('click', e => { const button = e.target.closest('[data-filter]'); if (button) chooseCategory(button.dataset.filter); });
   document.querySelector('.layout-switch').addEventListener('click', e => {
     const button = e.target.closest('[data-layout-choice]');
@@ -83,7 +96,7 @@
     const button = e.target.closest('[data-project]');
     if (!button) return;
     const p = projects[Number(button.dataset.project)];
-    document.querySelector('#detail-content').innerHTML = `${art(p)}<p class="eyebrow">${escapeHTML(p.category)}</p><h2 id="dialog-title">${escapeHTML(p.name)}</h2><p class="dialogdesc">${escapeHTML(p.description)}</p><h3>Zo gebruik je het</h3><p>${escapeHTML(p.usage)}</p><h3>Tech stack</h3><div class="tags">${p.stack.length ? p.stack.map(s => `<span>${escapeHTML(s)}</span>`).join('') : '<p>Nog niet vastgelegd.</p>'}</div><h3>Alle links</h3><div class="detaillinks">${link(p.url,'Open website')}${link(p.source,'Bekijk broncode','','code')}${link(p.docs || (p.source ? p.source+'#readme' : null),'Handleiding / README','','book')}</div>${(!p.url && p.kind !== 'library') || !p.source ? `<p class="missing">${[!p.url && p.kind !== 'library' ? 'Live link ontbreekt nog.' : '',!p.source ? 'Broncodelink ontbreekt nog.' : ''].filter(Boolean).join(' ')}</p>` : ''}`;
+    document.querySelector('#detail-content').innerHTML = `${art(p)}<p class="eyebrow">${escapeHTML(p.category)}</p><h2 id="dialog-title">${escapeHTML(p.name)}</h2><p class="dialogdesc">${escapeHTML(p.description)}</p><h3>Zo gebruik je het</h3><p>${escapeHTML(p.usage)}</p><h3>Tech stack</h3><div class="tags">${p.stack.length ? p.stack.map(s => `<span>${escapeHTML(s)}</span>`).join('') : '<p>Nog niet vastgelegd.</p>'}</div><h3>Alle links</h3><div class="detaillinks">${link(p.url,'Open website')}${link(p.source,'Bekijk broncode','','code')}${link(p.docs || (p.source ? p.source+'#readme' : null),'Handleiding / README','','book')}</div>${(!p.url && p.kind !== 'library' && !p.local) || !p.source ? `<p class="missing">${[!p.url && p.kind !== 'library' && !p.local ? 'Live link ontbreekt nog.' : '',!p.source ? 'Broncodelink ontbreekt nog.' : ''].filter(Boolean).join(' ')}</p>` : ''}`;
     dialog.setAttribute('aria-labelledby','dialog-title');
     dialog.showModal();
   });
@@ -93,5 +106,5 @@
     const rect = dialog.getBoundingClientRect();
     if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) dialog.close();
   });
-  applyView(); render();
+  applyView(); chooseCategory(location.hash === '#bouwstenen' ? 'Bouwstenen' : 'Alles', false);
 })();
