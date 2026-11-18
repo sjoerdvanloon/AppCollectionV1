@@ -89,8 +89,9 @@ async function guard(errors, label, fn) {
 
 async function collectApp(gh, app, options) {
   const errors = [];
+  const production = app.branch || 'main';
   const [main, staging, pulls, version] = await Promise.all([
-    guard(errors, 'main', () => branch(gh, app.repo, 'main')),
+    guard(errors, production, () => branch(gh, app.repo, production)),
     guard(errors, 'staging', () => branch(gh, app.repo, 'staging')),
     guard(errors, 'pulls', () => pullCounts(gh, app.repo)),
     readLiveVersion(app.url, options)
@@ -99,7 +100,7 @@ async function collectApp(gh, app, options) {
   if (!live && app.hosting === 'vercel') live = await guard(errors, 'deployments', () => productionDeployment(gh, app.repo));
   const unreleased = live && main ? await guard(errors, 'compare', () => compare(gh, app.repo, live.commit, main.commit)) : null;
   const stagingAhead = staging && main ? await guard(errors, 'staging', () => compare(gh, app.repo, main.commit, staging.commit)) : null;
-  const result = { name: app.name, repo: `${OWNER}/${app.repo}`, url: app.url, hosting: app.hosting, live, main, staging: staging ? { ...staging, ahead: stagingAhead?.ahead ?? null, behind: stagingAhead?.behind ?? null } : null, unreleased, pulls, errors };
+  const result = { name: app.name, repo: `${OWNER}/${app.repo}`, url: app.url, hosting: app.hosting, branch: production, live, main, staging: staging ? { ...staging, ahead: stagingAhead?.ahead ?? null, behind: stagingAhead?.behind ?? null } : null, unreleased, pulls, errors };
   result.state = verdict(result);
   return result;
 }
