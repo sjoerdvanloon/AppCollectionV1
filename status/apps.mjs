@@ -24,6 +24,7 @@ export const libraries = [
   { name: 'HealthKit', repo: 'HealthKitV1' },
   { name: 'SjoerdUi', repo: 'SjoerdUiV1' },
   { name: 'SignInKit', repo: 'SignInKitV1' },
+  { name: 'BlueprintKit', repo: 'BlueprintKitV1' },
   { name: 'EventLog', repo: 'EventLogV1' },
   { name: 'StorageKit', repo: 'StorageKitV1' },
   { name: 'MediaKit', repo: 'MediaKitV1' },
