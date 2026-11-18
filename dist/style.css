@@ -9,3 +9,10 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
 .shelf-intro{max-width:720px;margin:-6px 0 16px;color:var(--muted);font-size:14px;line-height:1.5}.shelf-intro a{color:inherit}.sectiontop h2 #shelf-title{font:inherit;color:inherit;margin:0;padding:0;border:0;letter-spacing:inherit}
 .filters .filter-blocks{margin-left:10px;border-color:var(--line)}.filters .filter-blocks::before{content:"▤ "}.category-spellen{background:#e9dcc0;color:#5b4b23}.category-muziek{background:#ecd3cb;color:#6e3d34}.category-ai{background:#e9e1b8;color:#5d5120}.category-bouwstenen{background:#d5e3e1;color:#335a58}
+
+.thumbnail-illustrated {
+  background-image: var(--illustration), url('assets/project-illustrations.png');
+  background-size: cover, 400% 400%;
+  background-position: center, var(--art-x) var(--art-y);
+  background-repeat: no-repeat;
+}

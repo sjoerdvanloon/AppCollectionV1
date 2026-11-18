@@ -16,9 +16,15 @@
     pin: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3 5 5-4 2-2 6-3-1-7 7m7-7-4-4 6-2Z"/></svg>'
   };
   const artwork = {'Expeditions Automa':0,'Sjoerds Projecten':1,'MiniPaint':2,'ArtAtlas':3,'Lost Cities Roll & Write':4,'Eldritch Horror':5,'Spellenkast':6,'Voltage Lab':7,'Pick a Pen: Crypts':8,'Reading Room':9,'FeedbackKit':10,'AI Model Explorer':11,'Flow Lab':12};
+  function slug(name) {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
   function art(p) {
-    const tile = artwork[p.name] ?? 13;
-    return `<span class="thumbnail" style="--art-x:${(tile % 4) * 100 / 3}%;--art-y:${Math.floor(tile / 4) * 100 / 3}%" aria-hidden="true"></span>`;
+    const hasTile = Object.hasOwn(artwork, p.name);
+    const tile = hasTile ? artwork[p.name] : 13;
+    const position = `--art-x:${(tile % 4) * 100 / 3}%;--art-y:${Math.floor(tile / 4) * 100 / 3}%`;
+    const illustration = hasTile ? '' : `;--illustration:url('assets/illustrations/${slug(p.name)}.webp')`;
+    return `<span class="thumbnail${hasTile ? '' : ' thumbnail-illustrated'}" style="${position}${illustration}" aria-hidden="true"></span>`;
   }
   function link(url, label, cls = '', icon = 'external') {
     return url ? `<a class="${cls}" href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer">${icons[icon]}<span>${label}</span></a>` : '';
