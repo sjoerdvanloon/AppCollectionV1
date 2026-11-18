@@ -8,7 +8,7 @@ export const apps = [
   { name: 'MiniPaint', repo: 'MiniPaintV1', url: 'https://minipaint-workshop.sjoerdvanloon83.chatgpt.site', hosting: 'sites' },
   { name: 'Spellenkast', repo: 'sjoerds-spellenkast', url: 'https://spellenkast.sjoerdvanloon.nl', hosting: 'sites' },
   { name: 'ArtAtlas', repo: 'ArtAtlasV1', url: 'https://sjoerds-kunstatlas.sjoerdvanloon83.chatgpt.site', hosting: 'sites' },
-  { name: 'Arkham Horror 1987', repo: 'ArkhamHorror1987', url: 'https://arkhamhorror1987.vercel.app', hosting: 'vercel' },
+  { name: 'Arkham Horror 1987', repo: 'ArkhamHorror1987', url: 'https://arkham1987.sjoerdvanloon.nl', hosting: 'vercel' },
   { name: 'Arkham Horror 2005', repo: 'ArkhamHorror2005', url: 'https://arkham2005.sjoerdvanloon.nl', hosting: 'vercel' },
   { name: 'Lost Cities Roll & Write', repo: 'lost-cities-roll-write', branch: 'master', url: 'https://lostcities.sjoerdvanloon.nl', hosting: 'vercel' },
   { name: 'Expeditions Automa', repo: 'AutomaV1', url: 'https://automa.sjoerdvanloon.nl', hosting: 'vercel' },
