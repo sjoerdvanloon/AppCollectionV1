@@ -12,7 +12,8 @@ test('catalogue has unique projects, valid categories and HTTPS links', async ()
   assert.equal(new Set(projects.map(p => p.name)).size, projects.length);
   for (const p of projects) {
     assert.ok(p.name && p.description && p.usage, p.name);
-    assert.ok(['Creatief','Spellen','Tools','Experimenten'].includes(p.category), p.name);
+    assert.ok(['Spellen','Creatief','Muziek','AI','Tools','Experimenten','Bouwstenen'].includes(p.category), p.name);
+    assert.equal(p.category === 'Bouwstenen', Boolean(p.kind), `${p.name}: Bouwstenen holds exactly the modules and services`);
     assert.ok(Array.isArray(p.stack), p.name);
     for (const url of [p.url, p.source, p.docs].filter(Boolean)) assert.equal(new URL(url).protocol, 'https:', p.name);
   }
@@ -29,10 +30,7 @@ test('building blocks and local-only tools are marked consistently', async () =>
     if (p.kind === 'service') assert.ok(p.url, `${p.name}: a shared service has a hosted address`);
     if (p.local) assert.ok(!p.url && !p.kind, `${p.name}: a local-only tool has no live link`);
   }
-  assert.ok(projects.some(p => p.kind) && projects.some(p => !p.kind), 'both shelves have projects');
-  const html = await readFile('dist/index.html', 'utf8');
-  assert.match(html, /data-shelf="apps"/);
-  assert.match(html, /data-shelf="bouwstenen"/);
+  assert.ok(projects.some(p => p.kind) && projects.some(p => !p.kind), 'there are apps and building blocks');
 });
 
 test('HTML references existing local assets and valid JavaScript', async () => {

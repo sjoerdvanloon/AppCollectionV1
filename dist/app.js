@@ -4,12 +4,9 @@
   const dialog = document.querySelector('#detail');
   const preferences = window.AppPreferences.current;
   let category = 'Alles';
-  // Two shelves: apps and tools people open, and the building blocks (modules and shared services) apps are made of.
+  // Building blocks: modules apps build in (kind 'library') and shared services they call (kind 'service').
   const isBlock = p => p.kind === 'library' || p.kind === 'service';
-  let shelf = location.hash === '#bouwstenen' ? 'bouwstenen' : 'apps';
-  const shelfFilters = { apps: ['Alles','Creatief','Spellen','Tools','Experimenten','Favorieten'], bouwstenen: ['Alles','Modules','Services','Favorieten'] };
-  const onShelf = p => shelf === 'bouwstenen' ? isBlock(p) : !isBlock(p);
-  const inCategory = p => category === 'Alles' || (category === 'Favorieten' ? favorites.has(p.name) : category === 'Modules' ? p.kind === 'library' : category === 'Services' ? p.kind === 'service' : p.category === category);
+  const inCategory = p => category === 'Alles' || (category === 'Favorieten' ? favorites.has(p.name) : p.category === category);
   const favorites = new Set(preferences.favorites);
   const escapeHTML = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const icons = {
@@ -38,7 +35,7 @@
   }
   function render() {
     const query = search.value.trim().toLocaleLowerCase('nl');
-    const shelfProjects = projects.filter(onShelf);
+    const shelfProjects = projects.filter(p => category === 'Bouwstenen' ? isBlock(p) : category === 'Favorieten' || !isBlock(p));
     const filtered = shelfProjects.filter(p => inCategory(p) && [p.name,p.description,...p.stack].join(' ').toLocaleLowerCase('nl').includes(query));
     filtered.sort((a,b) => Number(favorites.has(b.name)) - Number(favorites.has(a.name)));
     grid.innerHTML = filtered.map(p => {
@@ -59,32 +56,23 @@
     }).join('');
     document.querySelector('#empty').hidden = Boolean(filtered.length);
     document.querySelector('#results').textContent = `${filtered.length} ${filtered.length === 1 ? 'project' : 'projecten'} gevonden`;
-    const noun = shelf === 'bouwstenen' ? 'bouwstenen' : 'projecten';
+    const noun = category === 'Bouwstenen' ? 'bouwstenen' : 'projecten';
     document.querySelector('#total').textContent = filtered.length === shelfProjects.length ? `${shelfProjects.length} ${noun}` : `${filtered.length} van ${shelfProjects.length}`;
   }
-  function chooseCategory(value) {
-    category = value;
+  // Bouwstenen (modules and shared services) is a category of its own; Alles shows the apps and tools without them.
+  const categories = ['Alles','Spellen','Creatief','Muziek','AI','Tools','Experimenten','Favorieten','Bouwstenen'];
+  function chooseCategory(value, updateHash = true) {
+    category = categories.includes(value) ? value : 'Alles';
+    const blocks = category === 'Bouwstenen';
     document.querySelectorAll('[data-filter]').forEach(button => button.setAttribute('aria-pressed', button.dataset.filter === category));
+    document.querySelector('#shelf-title').textContent = blocks ? 'Bouwstenen' : 'Alle projecten';
+    document.querySelector('#shelf-intro').hidden = !blocks;
+    search.placeholder = blocks ? 'Zoek een module of techniek…' : 'Zoek een project of techniek…';
+    if (updateHash) history.replaceState(null, '', blocks ? '#bouwstenen' : location.pathname + location.search);
     render();
   }
-  function chooseShelf(value, updateHash = true) {
-    shelf = value;
-    category = 'Alles';
-    document.querySelectorAll('[data-shelf]').forEach(tab => tab.setAttribute('aria-selected', tab.dataset.shelf === shelf));
-    document.querySelector('#shelf-title').textContent = shelf === 'bouwstenen' ? 'Bouwstenen' : 'Alle projecten';
-    document.querySelector('#shelf-intro').hidden = shelf !== 'bouwstenen';
-    search.placeholder = shelf === 'bouwstenen' ? 'Zoek een module of techniek…' : 'Zoek een project of techniek…';
-    document.querySelector('.filters').innerHTML = shelfFilters[shelf].map(c => `<button type="button" aria-pressed="${c === 'Alles'}" data-filter="${c}">${c === 'Favorieten' ? '☆ ' : ''}${c}</button>`).join('');
-    if (updateHash) history.replaceState(null, '', shelf === 'bouwstenen' ? '#bouwstenen' : location.pathname + location.search);
-    render();
-  }
-  document.querySelector('.shelf-tabs').addEventListener('click', e => { const tab = e.target.closest('[data-shelf]'); if (tab && tab.dataset.shelf !== shelf) chooseShelf(tab.dataset.shelf); });
-  document.querySelector('.shelf-tabs').addEventListener('keydown', e => {
-    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-    const next = shelf === 'apps' ? 'bouwstenen' : 'apps';
-    chooseShelf(next); document.querySelector(`[data-shelf="${next}"]`).focus();
-  });
-  window.addEventListener('hashchange', () => { const want = location.hash === '#bouwstenen' ? 'bouwstenen' : 'apps'; if (want !== shelf) chooseShelf(want, false); });
+  document.querySelector('.filters').innerHTML = categories.map(c => `<button type="button" aria-pressed="${c === 'Alles'}" data-filter="${c}"${c === 'Bouwstenen' ? ' class="filter-blocks"' : ''}>${c === 'Favorieten' ? '☆ ' : ''}${c}</button>`).join('');
+  window.addEventListener('hashchange', () => { const want = location.hash === '#bouwstenen' ? 'Bouwstenen' : 'Alles'; if ((want === 'Bouwstenen') !== (category === 'Bouwstenen')) chooseCategory(want, false); });
   document.querySelector('.filters').addEventListener('click', e => { const button = e.target.closest('[data-filter]'); if (button) chooseCategory(button.dataset.filter); });
   document.querySelector('.layout-switch').addEventListener('click', e => {
     const button = e.target.closest('[data-layout-choice]');
@@ -118,5 +106,5 @@
     const rect = dialog.getBoundingClientRect();
     if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) dialog.close();
   });
-  applyView(); chooseShelf(shelf, false);
+  applyView(); chooseCategory(location.hash === '#bouwstenen' ? 'Bouwstenen' : 'Alles', false);
 })();

@@ -28,9 +28,9 @@ Layout, tech-stack visibility and favorites are saved in browser-local storage (
 
 The locally hosted illustration atlas in `dist/assets/project-illustrations.png` was generated for this project. Tile mappings in `dist/app.js` use project names and remain stable when the catalogue is reordered. New projects use a neutral fallback illustration until a tile is assigned. Posters retain the original geometric artwork.
 
-The page has two tabs. **Apps en tools** lists what people open and use. **Bouwstenen** (building blocks) lists the shared modules and services the apps are built from; `#bouwstenen` in the URL opens that tab.
+Categories: Spellen, Creatief, Muziek, AI, Tools, Experimenten and **Bouwstenen** (building blocks): the shared modules and services the apps are built from. **Alles** shows every app and tool but leaves the building blocks out. They have their own filter at the end of the row, and `#bouwstenen` in the URL opens it.
 
-In `dist/projects.js`, a building block has a `kind`:
+In `dist/projects.js`, a building block has `category: 'Bouwstenen'` and a `kind`:
 - `kind: 'library'` marks a module you build into an app. The card says Module and keeps `url` empty.
 - `kind: 'service'` marks a shared hosted service, such as ErrorLog or FeedbackKit. It keeps its `url`.
 
