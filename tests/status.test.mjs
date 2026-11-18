@@ -18,7 +18,7 @@ function fakeFetch(calls = []) {
     if (u.hostname === 'old.example') return new Response('nope', { status: 404 });
     if (u.hostname === 'sites.example') return new Response('<html>', { status: 200 });
     const path = u.pathname;
-    if (/\/branches\/main$/.test(path)) return json({ commit: { sha: path.includes('/Old/') ? sha('c') : sha('a'), commit: { committer: { date: '2026-11-17T00:00:00Z' } } } });
+    if (/\/branches\/(main|master)$/.test(path)) return json({ commit: { sha: path.includes('/Old/') ? sha('c') : sha('a'), commit: { committer: { date: '2026-11-17T00:00:00Z' } } } });
     if (/\/Live\/branches\/staging$/.test(path)) return json({ commit: { sha: sha('d') } });
     if (/\/branches\/staging$/.test(path)) return json({ message: 'Not Found' }, 404);
     if (/\/pulls$/.test(path)) return json([{ draft: true, user: { login: 'sjoerdvanloon' }, created_at: '2026-11-01' }, { draft: false, user: { login: 'dependabot[bot]' }, created_at: '2026-10-01' }, { draft: false, user: { login: 'sjoerdvanloon' }, created_at: '2026-11-10' }]);
@@ -35,6 +35,7 @@ function fakeFetch(calls = []) {
 }
 
 const testApps = [
+  { name: 'Master', repo: 'Master', branch: 'master', url: 'https://old.example', hosting: 'sites' },
   { name: 'Live', repo: 'Live', url: 'https://live.example', hosting: 'vercel' },
   { name: 'Old', repo: 'Old', url: 'https://old.example', hosting: 'vercel' },
   { name: 'Sites', repo: 'Sites', url: 'https://sites.example', hosting: 'sites' }
@@ -43,7 +44,9 @@ const testApps = [
 test('compares live commits with main, staging and open PRs', async () => {
   const calls = [];
   const s = await collectStatus({ token: 't0ken', fetchImpl: fakeFetch(calls), apps: testApps, libraries: [{ name: 'Lib', repo: 'Lib' }], now: new Date('2026-11-18T00:00:00Z') });
-  const [live, old, sites] = s.apps;
+  const [master, live, old, sites] = s.apps;
+  assert.equal(master.branch, 'master');
+  assert.ok(calls.some(c => c.url.endsWith('/Master/branches/master')));
   assert.equal(live.state, 'current');
   assert.equal(live.live.source, 'version.json');
   assert.equal(live.staging.ahead, 2);
@@ -60,7 +63,7 @@ test('compares live commits with main, staging and open PRs', async () => {
   assert.ok(calls.filter(c => c.url.startsWith('https://api.github.com')).every(c => c.auth === 'Bearer t0ken'));
   assert.ok(calls.filter(c => !c.url.startsWith('https://api.github.com')).every(c => !c.auth), 'the token never goes to app hosts');
   const md = toMarkdown(s);
-  assert.match(md, /1 app behind main, 1 with unknown live version/);
+  assert.match(md, /1 app behind main, 2 with unknown live version/);
   assert.match(md, /\*\*Old\*\*: behind main · live bbbbbbb · main ccccccc · 3 unreleased commits/);
 });
 

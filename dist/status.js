@@ -17,8 +17,8 @@
   function appRow(a) {
     const [cls, text] = states[a.state] || ['unknown', a.state];
     const live = a.live ? `${commitLink(a.repo, a.live.commit)}${a.live.version ? ` <span class="muted">${esc(a.live.version)}</span>` : ''}${a.live.source === 'github-deployment' ? ' <span class="muted" title="Uit de GitHub-deployment, geen /version.json">ⓓ</span>' : ''}` : '<span class="muted">?</span>';
-    const behind = a.state === 'behind' ? `<a href="https://github.com/${esc(a.repo)}/compare/${esc(a.live.commit)}...main">${plural(a.unreleased.ahead, 'commit', 'commits')}</a>` : a.state === 'current' ? '<span class="muted">0</span>' : '<span class="muted">?</span>';
-    const staging = !a.staging ? '<span class="muted">geen</span>' : a.staging.ahead ? `<a href="https://github.com/${esc(a.repo)}/compare/main...staging">+${a.staging.ahead}</a> op main` : '<span class="muted">gelijk</span>';
+    const behind = a.state === 'behind' ? `<a href="https://github.com/${esc(a.repo)}/compare/${esc(a.live.commit)}...${esc(a.branch || 'main')}">${plural(a.unreleased.ahead, 'commit', 'commits')}</a>` : a.state === 'current' ? '<span class="muted">0</span>' : '<span class="muted">?</span>';
+    const staging = !a.staging ? '<span class="muted">geen</span>' : a.staging.ahead ? `<a href="https://github.com/${esc(a.repo)}/compare/${esc(a.branch || 'main')}...staging">+${a.staging.ahead}</a> op main` : '<span class="muted">gelijk</span>';
     return `<tr><th scope="row"><a href="${esc(a.url)}">${esc(a.name)}</a><span class="host">${a.hosting === 'sites' ? 'ChatGPT Sites' : 'Vercel'}</span></th><td><span class="pill ${cls}">${text}</span></td><td>${live}</td><td>${commitLink(a.repo, a.main?.commit)}</td><td>${behind}</td><td>${staging}</td><td>${pulls(a.repo, a.pulls)}</td></tr>`;
   }
   function libraryRow(l) {
