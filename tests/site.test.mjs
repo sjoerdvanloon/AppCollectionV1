@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile, access } from 'node:fs/promises';
+import { readFile, access, stat } from 'node:fs/promises';
 import vm from 'node:vm';
 import { isMergedRelease } from '../scripts/release-policy.mjs';
 
@@ -40,6 +40,46 @@ test('HTML references existing local assets and valid JavaScript', async () => {
   const css = await readFile('dist/style.css', 'utf8');
   for (const [, file] of css.matchAll(/url\('([^']+)'\)/g)) {
     if (!/^(https?:|data:)/.test(file)) await access(`dist/${file}`);
+  }
+});
+
+test('each project renders a unique atlas tile or a WebP under 200 KB', async () => {
+  const context = { window: {} };
+  vm.runInNewContext(await readFile('dist/projects.js', 'utf8'), context);
+  const projects = context.window.projects;
+  const app = new vm.Script(await readFile('dist/app.js', 'utf8'));
+  const images = new Set();
+
+  for (const hash of ['', '#bouwstenen']) {
+    const grid = { addEventListener() {} };
+    const controls = { value: '', addEventListener() {} };
+    app.runInNewContext({
+      projects,
+      location: { hash },
+      window: { AppPreferences: { current: { favorites: [] } }, addEventListener() {} },
+      document: {
+        documentElement: { dataset: {} },
+        querySelector: selector => selector === '#grid' ? grid : controls,
+        querySelectorAll: () => [],
+      },
+    });
+    const thumbnails = [...grid.innerHTML.matchAll(/<span class="thumbnail[^"]*" style="([^"]+)"/g)];
+    const shelf = projects.filter(p => Boolean(p.kind) === Boolean(hash));
+    assert.equal(thumbnails.length, shelf.length);
+
+    for (const [index, [, style]] of thumbnails.entries()) {
+      const name = shelf[index].name;
+      const file = style.match(/--illustration:url\('(assets\/illustrations\/[a-z0-9-]+\.webp)'\)/)?.[1];
+      if (file) {
+        const image = await stat(`dist/${file}`);
+        assert.ok(image.isFile() && image.size < 200_000, `${name}: ${file} must be a file under 200 KB`);
+      } else {
+        assert.match(style, /^--art-x:[\d.]+%;--art-y:[\d.]+%$/, name);
+        assert.notEqual(style, `--art-x:${100 / 3}%;--art-y:100%`, `${name}: uses the compass fallback`);
+      }
+      assert.ok(!images.has(file ?? style), `${name}: duplicate illustration`);
+      images.add(file ?? style);
+    }
   }
 });
 

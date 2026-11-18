@@ -2,7 +2,9 @@
 
 ## Staging and production on Vercel
 
-Vercel project: `schuurvuur/appcollectionv1`, linked to `sjoerdvanloon/AppCollectionV1`.
+Vercel project: `schuurvuur/appcollectionv1`, linked to `sjoerdvanloon/AppCollectionV1`. Production: https://www.sjoerdvanloon.nl (`sjoerdvanloon.nl` redirects there; DNS at OVH). https://appcollectionv1.vercel.app keeps working.
+
+App links in `dist/projects.js` and `status/apps.mjs` use the apps' own subdomains (`<name>.sjoerdvanloon.nl`) where one exists; the other apps keep their Vercel or ChatGPT Sites address.
 
 1. Push changes to `staging` (or open a feature PR into `staging`). Vercel creates Preview deployments. The `staging` branch has a stable branch preview URL listed in Vercel.
 2. Open a release PR from `staging` into `main`. `Validate application` must pass; check the Vercel preview before merging.
@@ -26,7 +28,9 @@ The default Compact view has illustrated cards and no introductory banner. Switc
 
 Layout, tech-stack visibility and favorites are saved in browser-local storage (`appcollection.preferences.v1`); nothing is sent to a server. If storage is unavailable, the controls still work for the current visit. Search and category selections remain in place when switching layouts.
 
-The locally hosted illustration atlas in `dist/assets/project-illustrations.png` was generated for this project. Tile mappings in `dist/app.js` use project names and remain stable when the catalogue is reordered. New projects use a neutral fallback illustration until a tile is assigned. Posters retain the original geometric artwork.
+Compact cards and the Details dialog use the name-based tile mappings in `dist/app.js` for projects in the original illustration atlas. Other projects load a WebP from `dist/assets/illustrations/`, with the atlas's compass star as the fallback. Posters use their geometric themes.
+
+To illustrate a new project, save a 512 × 512 WebP as `dist/assets/illustrations/<slug>.webp`. Lowercase the name, replace each run of characters outside `a–z` and `0–9` with a dash, and trim leading and trailing dashes. For example, Gaming Together Matters uses `gaming-together-matters.webp`. Aim for under 80 KB. Run `npm test` to check that every project has an illustration and that each required WebP is under 200 KB.
 
 Categories: Spellen, Creatief, Muziek, AI, Tools, Experimenten and **Bouwstenen** (building blocks): the shared modules and services the apps are built from. **Alles** shows every app and tool but leaves the building blocks out. They have their own filter at the end of the row, and `#bouwstenen` in the URL opens it.
 

@@ -1,4 +1,4 @@
-// Weekly report: node scripts/status-report.mjs [--from https://appcollectionv1.vercel.app/api/status] [--json]
+// Weekly report: node scripts/status-report.mjs [--from https://www.sjoerdvanloon.nl/api/status] [--json]
 // Without --from it collects directly, using GITHUB_TOKEN or STATUS_GITHUB_TOKEN if set.
 import { collectStatus } from '../status/collect.mjs';
 import { toMarkdown } from '../status/report.mjs';
