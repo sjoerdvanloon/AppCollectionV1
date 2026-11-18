@@ -4,16 +4,16 @@
 export const OWNER = 'sjoerdvanloon';
 
 export const apps = [
-  { name: 'Sjoerds Projecten', repo: 'AppCollectionV1', url: 'https://appcollectionv1.vercel.app', hosting: 'vercel' },
+  { name: 'Sjoerds Projecten', repo: 'AppCollectionV1', url: 'https://www.sjoerdvanloon.nl', hosting: 'vercel' },
   { name: 'MiniPaint', repo: 'MiniPaintV1', url: 'https://minipaint-workshop.sjoerdvanloon83.chatgpt.site', hosting: 'sites' },
-  { name: 'Spellenkast', repo: 'sjoerds-spellenkast', url: 'https://sjoerds-spellenkast.sjoerdvanloon83.chatgpt.site', hosting: 'sites' },
+  { name: 'Spellenkast', repo: 'sjoerds-spellenkast', url: 'https://spellenkast.sjoerdvanloon.nl', hosting: 'sites' },
   { name: 'ArtAtlas', repo: 'ArtAtlasV1', url: 'https://sjoerds-kunstatlas.sjoerdvanloon83.chatgpt.site', hosting: 'sites' },
-  { name: 'Arkham Horror 1987', repo: 'ArkhamHorror1987', url: 'https://arkhamhorror1987.vercel.app', hosting: 'vercel' },
-  { name: 'Arkham Horror 2005', repo: 'ArkhamHorror2005', url: 'https://arkhamhorror2005.vercel.app', hosting: 'vercel' },
-  { name: 'Lost Cities Roll & Write', repo: 'lost-cities-roll-write', branch: 'master', url: 'https://lost-cities-roll-write.vercel.app', hosting: 'vercel' },
-  { name: 'Expeditions Automa', repo: 'AutomaV1', url: 'https://automav1.vercel.app', hosting: 'vercel' },
-  { name: 'Eldritch Horror', repo: 'eldritch-horror-thematic-builder', url: 'https://eldritch-horror-thematic-builder.vercel.app', hosting: 'vercel' },
-  { name: 'AI Model Explorer', repo: 'ai-model-explorer', branch: 'master', url: 'https://ai-model-explorer-ten.vercel.app', hosting: 'vercel' },
+  { name: 'Arkham Horror 1987', repo: 'ArkhamHorror1987', url: 'https://arkham1987.sjoerdvanloon.nl', hosting: 'vercel' },
+  { name: 'Arkham Horror 2005', repo: 'ArkhamHorror2005', url: 'https://arkham2005.sjoerdvanloon.nl', hosting: 'vercel' },
+  { name: 'Lost Cities Roll & Write', repo: 'lost-cities-roll-write', branch: 'master', url: 'https://lostcities.sjoerdvanloon.nl', hosting: 'vercel' },
+  { name: 'Expeditions Automa', repo: 'AutomaV1', url: 'https://automa.sjoerdvanloon.nl', hosting: 'vercel' },
+  { name: 'Eldritch Horror', repo: 'eldritch-horror-thematic-builder', url: 'https://eldritchhorror.sjoerdvanloon.nl', hosting: 'vercel' },
+  { name: 'AI Model Explorer', repo: 'ai-model-explorer', branch: 'master', url: 'https://aimodels.sjoerdvanloon.nl', hosting: 'vercel' },
   { name: 'ErrorLog', repo: 'ErrorLogV1', url: 'https://errorlogv1-six.vercel.app', hosting: 'vercel' },
   { name: 'FeedbackKit', repo: 'FeedbackKitV1', url: 'https://feedbackkit.sjoerdvanloon83.chatgpt.site', hosting: 'sites' }
 ];
