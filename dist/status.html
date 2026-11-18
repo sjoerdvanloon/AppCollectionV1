@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f2ea">
+  <meta name="robots" content="noindex">
+  <title>Status — Sjoerds projecten</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="status.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="./" aria-label="Sjoerds projecten, startpagina">
+      <img class="brandmark" src="favicon.svg" width="48" height="48" alt="">
+      <span class="brandcopy"><span class="brandtitle">Status</span><span class="brandsubtitle">Wat staat er live, en wat nog niet?</span></span>
+    </a>
+    <button id="refresh" type="button" class="status-refresh">↻ Vernieuwen</button>
+  </header>
+  <main class="status-page">
+    <p id="summary" class="status-summary" aria-live="polite">Status wordt opgehaald…</p>
+    <p id="notice" class="status-notice" hidden></p>
+    <section aria-labelledby="apps-title">
+      <div class="sectiontop"><h2 id="apps-title">Apps</h2><span class="edition">LIVE TEGENOVER GITHUB MAIN</span></div>
+      <div class="status-table-wrap"><table class="status-table">
+        <thead><tr><th scope="col">App</th><th scope="col">Status</th><th scope="col">Live</th><th scope="col">main</th><th scope="col">Nog niet live</th><th scope="col">staging</th><th scope="col">Open PR’s</th></tr></thead>
+        <tbody id="apps"></tbody>
+      </table></div>
+    </section>
+    <section aria-labelledby="libs-title">
+      <div class="sectiontop"><h2 id="libs-title">Bouwstenen</h2><span class="edition">LAATSTE TAG TEGENOVER MAIN</span></div>
+      <div class="status-table-wrap"><table class="status-table">
+        <thead><tr><th scope="col">Module</th><th scope="col">Laatste tag</th><th scope="col">Commits na tag</th><th scope="col">main</th><th scope="col">Open PR’s</th></tr></thead>
+        <tbody id="libraries"></tbody>
+      </table></div>
+    </section>
+    <footer><div><strong>Hoe werkt dit?</strong><p>Elke app meldt zijn build op <code>/version.json</code>. Vercel-apps zonder dat bestand vallen terug op de productie-deployment in GitHub. Apps op ChatGPT Sites zijn pas zichtbaar als ze <code>/version.json</code> publiceren. Ververst hooguit elke tien minuten.</p></div><a href="./">← Alle projecten</a></footer>
+  </main>
+  <script src="status.js"></script>
+</body>
+</html>
