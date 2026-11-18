@@ -18,6 +18,23 @@ test('catalogue has unique projects, valid categories and HTTPS links', async ()
   }
 });
 
+test('building blocks and local-only tools are marked consistently', async () => {
+  const context = { window: {} };
+  vm.runInNewContext(await readFile('dist/projects.js', 'utf8'), context);
+  const projects = context.window.projects;
+  for (const p of projects) {
+    assert.ok([undefined, 'library', 'service'].includes(p.kind), p.name);
+    if (p.kind) assert.ok(p.source, `${p.name}: a building block links its source`);
+    if (p.kind === 'library') assert.equal(p.url, null, `${p.name}: a module has no app of its own`);
+    if (p.kind === 'service') assert.ok(p.url, `${p.name}: a shared service has a hosted address`);
+    if (p.local) assert.ok(!p.url && !p.kind, `${p.name}: a local-only tool has no live link`);
+  }
+  assert.ok(projects.some(p => p.kind) && projects.some(p => !p.kind), 'both shelves have projects');
+  const html = await readFile('dist/index.html', 'utf8');
+  assert.match(html, /data-shelf="apps"/);
+  assert.match(html, /data-shelf="bouwstenen"/);
+});
+
 test('HTML references existing local assets and valid JavaScript', async () => {
   const html = await readFile('dist/index.html', 'utf8');
   for (const [, file] of html.matchAll(/(?:src|href)="([^"#]+\.(?:js|css|svg))"/g)) await access(`dist/${file}`);

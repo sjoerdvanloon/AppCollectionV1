@@ -28,4 +28,10 @@ Layout, tech-stack visibility and favorites are saved in browser-local storage (
 
 The locally hosted illustration atlas in `dist/assets/project-illustrations.png` was generated for this project. Tile mappings in `dist/app.js` use project names and remain stable when the catalogue is reordered. New projects use a neutral fallback illustration until a tile is assigned. Posters retain the original geometric artwork.
 
-Reusable libraries use kind: 'library' in dist/projects.js. Their cards show Module and source/documentation links without suggesting a missing hosted app. Libraries keep url empty when no standalone application exists.
+The page has two tabs. **Apps en tools** lists what people open and use. **Bouwstenen** (building blocks) lists the shared modules and services the apps are built from; `#bouwstenen` in the URL opens that tab.
+
+In `dist/projects.js`, a building block has a `kind`:
+- `kind: 'library'` marks a module you build into an app. The card says Module and keeps `url` empty.
+- `kind: 'service'` marks a shared hosted service, such as ErrorLog or FeedbackKit. It keeps its `url`.
+
+A tool that only runs on your own computer has `local: true` and no `url`; its card says Alleen lokaal (HomeNetwork). `tests/site.test.mjs` checks these rules.
