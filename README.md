@@ -2,7 +2,9 @@
 
 ## Staging and production on Vercel
 
-Vercel project: `schuurvuur/appcollectionv1`, linked to `sjoerdvanloon/AppCollectionV1`.
+Vercel project: `schuurvuur/appcollectionv1`, linked to `sjoerdvanloon/AppCollectionV1`. Production: https://www.sjoerdvanloon.nl (`sjoerdvanloon.nl` redirects there; DNS at OVH). https://appcollectionv1.vercel.app keeps working.
+
+App links in `dist/projects.js` and `status/apps.mjs` use the apps' own subdomains (`<name>.sjoerdvanloon.nl`) where one exists; the other apps keep their Vercel or ChatGPT Sites address.
 
 1. Push changes to `staging` (or open a feature PR into `staging`). Vercel creates Preview deployments. The `staging` branch has a stable branch preview URL listed in Vercel.
 2. Open a release PR from `staging` into `main`. `Validate application` must pass; check the Vercel preview before merging.
