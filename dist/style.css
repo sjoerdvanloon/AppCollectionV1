@@ -20,14 +20,15 @@
    the Most Horrible Personal Page. It comes out and dances on hover or keyboard focus. */
 .secret-baby {
   position: fixed; left: 0; bottom: 6px; z-index: 5; display: block; line-height: 0;
-  transform: translateX(-22px) rotate(12deg); opacity: .35;
+  transform: translateX(-14px) rotate(12deg); opacity: .75;
   transition: transform .35s ease, opacity .35s ease;
 }
 .secret-baby img { display: block; width: 30px; height: 60px; filter: drop-shadow(0 2px 2px rgba(0,0,0,.25)); }
 .secret-baby:hover, .secret-baby:focus-visible { transform: translateX(8px); opacity: 1; }
-.secret-baby:hover img, .secret-baby:focus-visible img { animation: secret-baby-dance .5s steps(2) infinite; }
+.secret-baby:hover img, .secret-baby:focus-visible img { animation: secret-baby-dance 1.6s ease-in-out infinite; }
 .secret-baby:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
-@keyframes secret-baby-dance { 0% { transform: scaleX(1) translateY(0); } 50% { transform: scaleX(-1) translateY(-4px); } 100% { transform: scaleX(1) translateY(0); } }
+/* A calm sway and bob, no flipping: flipping every few frames read as flicker. */
+@keyframes secret-baby-dance { 0%, 100% { transform: rotate(-6deg) translateY(0); } 25% { transform: rotate(0deg) translateY(-3px); } 50% { transform: rotate(6deg) translateY(0); } 75% { transform: rotate(0deg) translateY(-3px); } }
 @media (prefers-reduced-motion: reduce) {
   .secret-baby:hover img, .secret-baby:focus-visible img { animation: none; }
 }
