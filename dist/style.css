@@ -16,3 +16,19 @@
   background-position: center, var(--art-x) var(--art-y);
   background-repeat: no-repeat;
 }
+/* Easter egg: the 1997 dancing baby hides in the bottom-left corner, barely peeking out, and links to
+   the Most Horrible Personal Page. It comes out and dances on hover or keyboard focus. */
+.secret-baby {
+  position: fixed; left: 0; bottom: 6px; z-index: 5; display: block; line-height: 0;
+  transform: translateX(-22px) rotate(12deg); opacity: .35;
+  transition: transform .35s ease, opacity .35s ease;
+}
+.secret-baby img { display: block; width: 30px; height: 60px; filter: drop-shadow(0 2px 2px rgba(0,0,0,.25)); }
+.secret-baby:hover, .secret-baby:focus-visible { transform: translateX(8px); opacity: 1; }
+.secret-baby:hover img, .secret-baby:focus-visible img { animation: secret-baby-dance .5s steps(2) infinite; }
+.secret-baby:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
+@keyframes secret-baby-dance { 0% { transform: scaleX(1) translateY(0); } 50% { transform: scaleX(-1) translateY(-4px); } 100% { transform: scaleX(1) translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  .secret-baby:hover img, .secret-baby:focus-visible img { animation: none; }
+}
+@media print { .secret-baby { display: none; } }
