@@ -15,7 +15,7 @@ export const apps = [
   { name: 'Eldritch Horror', repo: 'eldritch-horror-thematic-builder', url: 'https://eldritchhorror.sjoerdvanloon.nl', hosting: 'vercel' },
   { name: 'AI Model Explorer', repo: 'ai-model-explorer', branch: 'master', url: 'https://aimodels.sjoerdvanloon.nl', hosting: 'vercel' },
   { name: 'ErrorLog', repo: 'ErrorLogV1', url: 'https://errorlogv1-six.vercel.app', hosting: 'vercel' },
-  { name: 'FeedbackKit', repo: 'FeedbackKitV1', url: 'https://feedbackkit-schuurvuur.vercel.app', hosting: 'vercel' }
+  { name: 'FeedbackKit', repo: 'FeedbackKitV1', url: 'https://feedbackkit.sjoerdvanloon.nl', hosting: 'vercel' }
 ];
 
 // branch: the production branch when it is not 'main'.
