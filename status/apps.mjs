@@ -14,6 +14,8 @@ export const apps = [
   { name: 'Expeditions Automa', repo: 'AutomaV1', url: 'https://automa.sjoerdvanloon.nl', hosting: 'vercel' },
   { name: 'Eldritch Horror', repo: 'eldritch-horror-thematic-builder', url: 'https://eldritchhorror.sjoerdvanloon.nl', hosting: 'vercel' },
   { name: 'AI Model Explorer', repo: 'ai-model-explorer', branch: 'master', url: 'https://aimodels.sjoerdvanloon.nl', hosting: 'vercel' },
+  { name: 'MeepleMentor', repo: 'MeepleMentorV1', url: 'https://meeplementor.sjoerdvanloon.nl', hosting: 'vercel' },
+  { name: 'ClusterLab', repo: 'ClusterLabV1', url: 'https://clusterlab.sjoerdvanloon.nl', hosting: 'vercel' },
   { name: 'ErrorLog', repo: 'ErrorLogV1', url: 'https://errorlogv1-six.vercel.app', hosting: 'vercel' },
   { name: 'FeedbackKit', repo: 'FeedbackKitV1', url: 'https://feedbackkit.sjoerdvanloon.nl', hosting: 'vercel' }
 ];
