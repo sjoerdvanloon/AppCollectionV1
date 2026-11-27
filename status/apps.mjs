@@ -6,7 +6,7 @@ export const OWNER = 'sjoerdvanloon';
 export const apps = [
   { name: 'Sjoerds Projecten', repo: 'AppCollectionV1', url: 'https://www.sjoerdvanloon.nl', hosting: 'vercel' },
   { name: 'MiniPaint', repo: 'MiniPaintV1', url: 'https://minipaint-workshop.sjoerdvanloon83.chatgpt.site', hosting: 'sites' },
-  { name: 'Spellenkast', repo: 'sjoerds-spellenkast', url: 'https://spellenkast.sjoerdvanloon.nl', hosting: 'sites' },
+  { name: 'Spellenkast', repo: 'sjoerds-spellenkast', url: 'https://spellenkast.sjoerdvanloon.nl', hosting: 'vercel' },
   { name: 'ArtAtlas', repo: 'ArtAtlasV1', url: 'https://sjoerds-kunstatlas.sjoerdvanloon83.chatgpt.site', hosting: 'sites' },
   { name: 'Arkham Horror 1987', repo: 'ArkhamHorror1987', url: 'https://arkham1987.sjoerdvanloon.nl', hosting: 'vercel' },
   { name: 'Arkham Horror 2005', repo: 'ArkhamHorror2005', url: 'https://arkham2005.sjoerdvanloon.nl', hosting: 'vercel' },
