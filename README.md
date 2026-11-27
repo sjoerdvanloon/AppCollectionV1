@@ -45,5 +45,25 @@ A tool that only runs on your own computer has `local: true` and no `url`; its c
 `/status` compares what each app runs live with GitHub: live commit, `main`, commits not yet live, `staging` and open PR counts, plus the newest tag of each building block. The list lives in `status/apps.mjs`; the collector in `status/collect.mjs` serves both `/api/status` (a Vercel Function, cached ten minutes) and `npm run status` (the weekly report in Markdown).
 
 - Live version: each app's public `/version.json` (HealthKit 0.3 schema: `schema`, `app`, `version`, `commit`, …). This site writes its own at build time (`scripts/write-version.mjs`). Vercel apps without the file fall back to the latest successful GitHub Production deployment. ChatGPT Sites apps stay "unknown" until they publish `/version.json`.
-- GitHub: set `STATUS_GITHUB_TOKEN` in Vercel, a fine-grained read-only token (Contents, Pull requests, Deployments) for the `sjoerdvanloon` repositories. Without it, private repositories cannot be read.
+- GitHub: `STATUS_GITHUB_TOKEN`, a fine-grained read-only token (Contents, Pull requests, Deployments) for the `sjoerdvanloon` repositories. Without it, private repositories cannot be read. See Settings below for where it lives.
 - The output is public, so it holds counts and commit ids only: no PR titles, bodies or authors.
+
+## Settings
+
+Every setting the site reads is listed in `settings.json` and, without a value, in `.env.example` (written by `npm run settings:example`). The values live in Infisical only: project `appcollection` on https://eu.infisical.com (`.infisical.yaml`), environment `prod`. The code reads `process.env` and nothing else, so there is no Infisical SDK in it.
+
+| Setting | Needed | What it is |
+| --- | --- | --- |
+| `STATUS_GITHUB_TOKEN` | optional, secret | Read-only GitHub token for `/status` and the weekly report |
+
+- `npm run settings:check` checks this environment; the build runs it too. A missing required setting stops the build by name; a missing optional one is a warning in the build log.
+- `npm run online:check` runs the same check against the values in Infisical.
+- `npm run online:status` writes the weekly report with the token from Infisical.
+
+Getting a value to Vercel, after adding or changing it in Infisical:
+
+1. Once per checkout: `vercel link --project appcollectionv1 --scope schuurvuur`.
+2. `npm run online:settings:push` copies the values from Infisical to the Vercel project (Production). They go in on standard input and are never shown.
+3. Redeploy production in Vercel (Deployments, the newest production deployment, Redeploy). A running deployment keeps its old values.
+
+There is no secret sync and no machine identity: the copy is a command you run by hand.

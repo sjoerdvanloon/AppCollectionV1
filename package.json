@@ -8,7 +8,13 @@
   },
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "build": "npm test && node scripts/verify-production.mjs && node scripts/write-version.mjs",
-    "status": "node scripts/status-report.mjs"
+    "build": "npm test && node scripts/settings.mjs && node scripts/verify-production.mjs && node scripts/write-version.mjs",
+    "check": "npm run build",
+    "status": "node scripts/status-report.mjs",
+    "settings:check": "node scripts/settings.mjs",
+    "settings:example": "node scripts/settings.mjs --example",
+    "online:check": "infisical run --env=prod --silent -- node scripts/settings.mjs --online",
+    "online:status": "infisical run --env=prod --silent -- node scripts/status-report.mjs",
+    "online:settings:push": "infisical run --env=prod --silent -- node scripts/push-settings-to-vercel.mjs"
   }
 }
