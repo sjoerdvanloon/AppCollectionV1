@@ -1,5 +1,5 @@
 {
-  "about": "Every setting AppCollection reads. One list for the check (scripts/settings.mjs), the copy to Vercel (scripts/push-settings-to-vercel.mjs) and .env.example (npm run settings:example). hosted: 'required' = must be set on Vercel, 'forbidden' = must not exist there, 'optional' otherwise. Values live in Infisical, project appcollection, environment prod; never here.",
+  "about": "Every setting AppCollection reads. One list for the check (scripts/settings.mjs) and .env.example (npm run settings:example). hosted: 'required' = must be set on Vercel, 'forbidden' = must not exist there, 'optional' otherwise. Values live in Infisical, project appcollection, environment prod; never here.",
   "settings": [
     { "name": "STATUS_GITHUB_TOKEN", "secret": true, "hosted": "optional", "description": "Fine-grained read-only GitHub token (Contents, Pull requests, Deployments) for the sjoerdvanloon repositories. Without it /status and the weekly report see public repositories only", "missing": "/status shows private repositories as no-github" }
   ]
