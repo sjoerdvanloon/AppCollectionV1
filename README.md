@@ -60,10 +60,10 @@ Every setting the site reads is listed in `settings.json` and, without a value, 
 - `npm run online:check` runs the same check against the values in Infisical.
 - `npm run online:status` writes the weekly report with the token from Infisical.
 
-Getting a value to Vercel, after adding or changing it in Infisical:
+Getting a value to Vercel: the Infisical secret sync `vercel-appcollectionv1-prod` copies environment `prod` (path `/`) to the Vercel project `appcollectionv1`, Production. Auto-sync is on, and the sync never deletes a name in Vercel.
 
-1. Once per checkout: `vercel link --project appcollectionv1 --scope schuurvuur`.
-2. `npm run online:settings:push` copies the values from Infisical to the Vercel project (Production). They go in on standard input and are never shown.
-3. Redeploy production in Vercel (Deployments, the newest production deployment, Redeploy). A running deployment keeps its old values.
+1. Add or change the value in Infisical (project `appcollection`, environment `prod`). Never change it in the Vercel dashboard: the next sync overwrites it.
+2. Check the sync under Integrations, Secret Syncs; "Trigger Sync" runs it by hand.
+3. A new value for a name the site already has works after a redeploy of production (Vercel, Deployments, the newest production deployment, Redeploy). A changed permission on the same GitHub token needs nothing: `/status` follows within ten minutes.
 
-There is no secret sync and no machine identity: the copy is a command you run by hand.
+There is one writer, the sync: the repo has no command that copies settings to Vercel. Removing a name is done in both places, because the sync does not delete.
